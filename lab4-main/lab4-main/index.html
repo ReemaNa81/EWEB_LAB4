@@ -13,42 +13,35 @@
       </h1>
     </div>
     <script>
-      const fields = ["image", "symbol", "name", "summary"]
-      const row = (k, v, i) => {
-        // complete tr string
-        //return `<tr>${Object.entries(v).filter(([k,v])=>fields.includes(k)).map(([k, v], i) => cell(k,v)).join('')}</tr>`
-        return `<tr>${fields.map((f) => cell(k, f, v)).join("")}</tr>`
+
+      const tableFields = ["image", "key", "name", "summary"]
+
+      const row = (key, val, i) => {
+        return `<tr>${tableFields.map((field) => cell(key, field, val)).join("")}</tr>`;
       }
 
-      const cell = (sym, prop, v) => {
-        switch (prop) {
+      const cell = (key, field, val) => {
+        switch (field) {
           case "image":
-            return `<td class="w-16 p-2 align-top border-b border-gray-200"><img class="h-full w-auto" src="${v[prop]}" /></td>`
-          case "symbol":
-            return `<td class="p-2 align-top border-b border-gray-200">${sym}</td>`
+            return `<td class="w-16 p-2 align-top border-b border-gray-200"><img class="h-full w-auto" src="${val[field]}" /></td>`;
+          case "key":
+            return `<td class="p-2 align-top border-b border-gray-200">${key}</td>`;
           case "name":
-            return `<td class="p-2 align-top border-b border-gray-200"><a class="text-blue-400 font-bold hover:underline" href="${v["website"]}" target="_blank">${v[prop]}</a></td>`
-          default:
-            return `<td class="p-2 align-top border-b border-gray-200">${v[prop]}</td>`
+            return `<td class="p-2 align-top border-b border-gray-200"><a class="text-blue-400 font-bold hover:underline" href="${val["website"]}" target="_blank">${val[field]}</a></td>`;
+          default: // summary
+            return `<td class="p-2 align-top border-b border-gray-200">${val[field]}</td>`;
         }
       }
 
+
       const createTable = (data) => {
         // create table string and insert it into "app" div before end
-        console.log(data)
         const rows = Object.entries(data)
-          .map(([k, v], i) => row(k, v, i))
-          .join("")
+          .map(([key, val], i) => row(key, val, i))
+          .join("");
 
-        const rowHead = `<tr>${fields
-          .map(
-            (f) =>
-              `<th class="font-bold bg-gray-200">${f === "image" ? "" : f}</th>`
-          )
-          .join("")}</tr>`
-
-        const table = `<table class="w-full">${rowHead}${rows}</table>`
-        document.getElementById("app").insertAdjacentHTML("beforeend", table)
+        const table = `<table class="w-full border-t border-gray-200">${rows}</table>`;
+        document.getElementById("app").insertAdjacentHTML("beforeend", table);
       }
 
       const url = "https://api.mtw-testnet.com/assets/all"
@@ -58,33 +51,6 @@
         })
         .then((v) => createTable(v))
         .catch((err) => console.log(err))
-    </script>
-       <script>
-        // custom config for the MTW app 
-        const mtwAppConfig = {
-            border: true // app border in the MTW page                    
-        }
-    
-        ///////////////////////////////////////////////////////
-        // implement this functions in order to use private API        
-        const sendPrivateApiRequest = async () => {
-            // your code here:
-            // sendRequestToParent({ cat: 'getAssets' })
-        }        
-    
-        const acceptPrivateApiResponse = async (data) => {
-            // process received data here:
-            // console.log(data)
-        }
-
-
-    
-        // use this in order to send on document load
-        document.addEventListener('DOMContentLoaded', () => {
-            // your code here:
-            //sendRequestToParent({ method: 'getAssets' })
-        })
-    
     </script>
     <script src="https://morethanwallet.com/appstore/index.js"></script>
   </body>
